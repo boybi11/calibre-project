@@ -1,0 +1,34 @@
+<table class='table table-striped table-bordered'>
+	<tr>
+		<th>Name</th>
+		<td>{{$user->name}}</td>
+	</tr>
+	<tr>
+		<th>email</th>
+		<td>{{$user->email}}</td>
+	</tr>
+	<tr>
+		<th>cms</th>
+		<td>{{$user->cms}}</td>
+	</tr>
+	<tr>
+		<th>verified</th>
+		<td>{{$user->verified}}</td>
+	</tr>
+	<tr>
+		<th>status</th>
+		<td>{{$user->status}}</td>
+	</tr>
+	<tr>
+		<th>type</th>
+		<td>{{$user->type}}</td>
+	</tr>
+	<tr>
+		<th>last_login</th>
+		<td>{{$user->last_login}}</td>
+	</tr>
+	<tr>
+		<th>last_ip</th>
+		<td>{{$user->last_ip}}</td>
+	</tr>
+</table>
