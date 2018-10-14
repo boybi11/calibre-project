@@ -30,3 +30,7 @@ Route::get('api/products/get', array('as'=>'apiProductsGet','uses'=>'ProductCont
 Route::post('api/products/store', array('as'=>'apiProductsStore','uses'=>'ProductController@store', 'middleware'=>'cors'));
 Route::post('api/products/update', array('as'=>'apiProductsUpdate','uses'=>'ProductController@update', 'middleware'=>'cors'));
 Route::post('api/products/destroy', array('as'=>'apiProductsDestroy','uses'=>'ProductController@destroy', 'middleware'=>'cors'));
+
+Route::get('api/classes/get_list', array('as'=>'apiClassesList','uses'=>'ClassController@getList', 'middleware'=>['api','cors']));
+Route::post('api/classes/create', array('as'=>'apiClassesCreate','uses'=>'ClassController@create', 'middleware'=>['api','cors']));
+Route::post('api/classes/delete', array('as'=>'apiClassesDelete','uses'=>'ClassController@delete', 'middleware'=>['api','cors']));

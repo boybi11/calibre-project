@@ -57,7 +57,9 @@
         </ul>
       </li> -->
       <li class="{{Menu::active('dashboard', @$menu)}}"><a href="{{route('adminDashboard')}}"><i class="fa fa-home"></i>Dashboard</a></li>
-      <li class="{{Menu::active('users', @$menu)}}"><a href="{{route('adminUsers')}}"><i class="fa fa-user"></i>Users</a></li>
+      <li class="{{Menu::active('dashboard', @$menu)}}"><a href="{{route('adminClasses')}}"><i class="fa fa-stack-overflow" aria-hidden="true"></i>Classes</a></li>
+      <li class="{{Menu::active('users-gm', @$menu)}}"><a href="{{route('adminUsers', ['category'=>'gm'])}}"><i class="fa fa-user"></i>Game Masters</a></li>
+      <li class="{{Menu::active('users-pl', @$menu)}}"><a href="{{route('adminUsers', ['category'=>'pl'])}}"><i class="fa fa-user"></i>Players</a></li>
       <li class="{{Menu::active('options', @$menu)}}"><a href="{{route('adminOptions')}}"><i class="fa fa-cog"></i>Options</a></li>
       <li class="{{Menu::active('samples', @$menu)}}"><a href="{{route('adminSamples')}}"><i class="fa fa-user-secret"></i>Samples</a></li>
     </ul>

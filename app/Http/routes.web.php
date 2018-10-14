@@ -76,47 +76,10 @@ Route::get('admin/assets/download', array('as'=>'adminAssetsDownload','uses'=>'A
 Route::post('admin/assets/update', array('as'=>'adminAssetsUpdate','uses'=>'Admin\AssetController@update'));
 Route::post('admin/assets/destroy', array('as'=>'adminAssetsDestroy','uses'=>'Admin\AssetController@destroy'));
 
-// Route::post('admin/seo/save', array('as'=>'adminSeoSave','uses'=>'Admin\SeoController@save'));
-
-Route::get('admin/tests', array('as'=>'adminTests','uses'=>'Admin\TestController@index'));
-Route::get('admin/tests/create', array('as'=>'adminTestsCreate','uses'=>'Admin\TestController@create'));
-Route::post('admin/tests/', array('as'=>'adminTestsStore','uses'=>'Admin\TestController@store'));
-Route::get('admin/tests/{id}/show', array('as'=>'adminTestsShow','uses'=>'Admin\TestController@show'));
-Route::get('admin/tests/{id}/view', array('as'=>'adminTestsView','uses'=>'Admin\TestController@view'));
-Route::get('admin/tests/{id}/edit', array('as'=>'adminTestsEdit','uses'=>'Admin\TestController@edit'));
-Route::patch('admin/tests/{id}', array('as'=>'adminTestsUpdate','uses'=>'Admin\TestController@update'));
-Route::post('admin/tests/seo', array('as'=>'adminTestsSeo','uses'=>'Admin\TestController@seo'));
-Route::delete('admin/tests/destroy', array('as'=>'adminTestsDestroy','uses'=>'Admin\TestController@destroy'));
-Route::get('admin/tests/crop/url', array('as'=>'adminTestsCropUrl','uses'=>'Admin\TestController@crop_url'));
-Route::get('admin/tests/{id}/crop/{column}/{asset_id}', array('as'=>'adminTestsCropForm','uses'=>'Admin\TestController@crop_form'));
-Route::patch('admin/tests/{id}/crop', array('as'=>'adminTestsCrop','uses'=>'Admin\TestController@crop'));
-
-Route::get('admin/long_names', array('as'=>'adminLongNames','uses'=>'Admin\LongNameController@index'));
-Route::get('admin/long_names/create', array('as'=>'adminLongNamesCreate','uses'=>'Admin\LongNameController@create'));
-Route::post('admin/long_names/', array('as'=>'adminLongNamesStore','uses'=>'Admin\LongNameController@store'));
-Route::get('admin/long_names/{id}/show', array('as'=>'adminLongNamesShow','uses'=>'Admin\LongNameController@show'));
-Route::get('admin/long_names/{id}/edit', array('as'=>'adminLongNamesEdit','uses'=>'Admin\LongNameController@edit'));
-Route::patch('admin/long_names/{id}', array('as'=>'adminLongNamesUpdate','uses'=>'Admin\LongNameController@update'));
-Route::delete('admin/long_names/destroy', array('as'=>'adminLongNamesDestroy','uses'=>'Admin\LongNameController@destroy'));
-
-Route::get('admin/products', array('as'=>'adminProducts','uses'=>'Admin\ProductController@index'));
-Route::get('admin/products/create', array('as'=>'adminProductsCreate','uses'=>'Admin\ProductController@create'));
-Route::post('admin/products/', array('as'=>'adminProductsStore','uses'=>'Admin\ProductController@store'));
-Route::get('admin/products/{id}/show', array('as'=>'adminProductsShow','uses'=>'Admin\ProductController@show'));
-Route::get('admin/products/{id}/view', array('as'=>'adminProductsView','uses'=>'Admin\ProductController@view'));
-Route::get('admin/products/{id}/edit', array('as'=>'adminProductsEdit','uses'=>'Admin\ProductController@edit'));
-Route::patch('admin/products/{id}', array('as'=>'adminProductsUpdate','uses'=>'Admin\ProductController@update'));
-Route::post('admin/products/seo', array('as'=>'adminProductsSeo','uses'=>'Admin\ProductController@seo'));
-Route::delete('admin/products/destroy', array('as'=>'adminProductsDestroy','uses'=>'Admin\ProductController@destroy'));
-Route::get('admin/products/crop/url', array('as'=>'adminProductsCropUrl','uses'=>'Admin\ProductController@crop_url'));
-Route::get('admin/products/{id}/crop/{column}/{asset_id}', array('as'=>'adminProductsCropForm','uses'=>'Admin\ProductController@crop_form'));
-Route::patch('admin/products/{id}/crop', array('as'=>'adminProductsCrop','uses'=>'Admin\ProductController@crop'));
-
-// Route::post('api/auth', array('as'=>'apiAuth','uses'=>'Api\AuthController@authenticate'));
-// Route::get('api/auth/logout', array('as'=>'apiAuthLogout','uses'=>'Api\AuthController@logout'));
-
-// Route::get('api/samples/find', array('as'=>'apiSamplesFind','uses'=>'Api\SampleController@find'));
-// Route::get('api/samples/get', array('as'=>'apiSamplesGet','uses'=>'Api\SampleController@get'));
-// Route::post('api/samples/store', array('as'=>'apiSamplesStore','uses'=>'Api\SampleController@store'));
-// Route::post('api/samples/update', array('as'=>'apiSamplesUpdate','uses'=>'Api\SampleController@update'));
-// Route::post('api/samples/destroy', array('as'=>'apiSamplesDestroy','uses'=>'Api\SampleController@destroy'));
+Route::get('admin/classes', array('as'=>'adminClasses','uses'=>'Admin\ClassController@index'));
+Route::get('admin/classes/create', array('as'=>'adminClassesCreate','uses'=>'Admin\ClassController@create'));
+Route::post('admin/classes/', array('as'=>'adminClassesStore','uses'=>'Admin\ClassController@store'));
+Route::get('admin/classes/{id}/show', array('as'=>'adminClassesShow','uses'=>'Admin\ClassController@show'));
+Route::get('admin/classes/{id}/edit', array('as'=>'adminClassesEdit','uses'=>'Admin\ClassController@edit'));
+Route::patch('admin/classes/{id}', array('as'=>'adminClassesUpdate','uses'=>'Admin\ClassController@update'));
+Route::delete('admin/classes/destroy', array('as'=>'adminClassesDestroy','uses'=>'Admin\ClassController@destroy'));

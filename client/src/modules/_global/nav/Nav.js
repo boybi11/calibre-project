@@ -27,10 +27,10 @@ export class Nav extends React.Component {
 	render() {
 		return (
 			<div className="flex header-menu">
-				<div className="flex-auto padded-10 pad-sides-50 avatar-container">
+				<div className="flex-auto padded-10 pad-sides-50 avatar-container flex flex-align-center">
 					<img
-						className="thumb-200"
-						src={require('assets/img/avatars/avatar1.png')}
+						className="thumb-50"
+						src={require('assets/img/avatars/ar.gif')}
 					/>
 				</div>
 				<div className="flex-1 overflow-hidden flex flex-direction-column">
@@ -54,7 +54,7 @@ export class Nav extends React.Component {
 								</div>
 							</CTooltip>
 						</div>
-						<div className={this.state.menu + " menu-toggable overflow-hidden"}>
+						<div className={" menu-toggable overflow-hidden"}>
 							<div className="absolute top-0 left-0">
 								<div className="padded-10 inline-block transitioned">
 									<CTooltip
@@ -84,10 +84,10 @@ export class Nav extends React.Component {
 								</div>
 								<div className="padded-10 inline-block transitioned">
 									<CTooltip
-										title="Tasks"
+										title="Leagues"
 										placement="bottom"
 									>
-										<Link to="/tasks">
+										<Link to="/leagues">
 											<div
 												className="icon icon-circular icon-large text-large bg-success hover-scale transitioned margin-right-10"
 												role="button"
@@ -161,6 +161,43 @@ export class Nav extends React.Component {
 						</div>
 					</div>
 				</div>
+				<aside id="sideNav" className={this.state.menu}>
+					<div className="user-image">
+						<div className="dismiss" onClick={this.toggleMenu}>
+							<i className="fas fa-times" />
+						</div>
+						<div>
+							<img
+								src={require('assets/img/log.jpg')}
+							/>
+							<div className="user-name">
+								{this.props.user.first_name + " " + this.props.user.last_name}
+							</div>
+							<div className="user-type">
+								{this.props.user.front_user_type == "student" ? "Player" : "Game Master"}
+							</div>
+						</div>
+					</div>
+					<div className="side-links">
+						<ul>
+							<li>
+								<Link to="/leagues">
+									<i className="fas fa-users" /> Leagues
+								</Link>
+							</li>
+							<li>
+								<Link to="/leagues">
+									<i className="fas fa-tasks" /> Quests
+								</Link>
+							</li>
+							<li>
+								<Link to="/leagues">
+									<i className="far fa-user" /> Profile
+								</Link>
+							</li>
+						</ul>
+					</div>
+				</aside>
 			</div>
 		);
 	}

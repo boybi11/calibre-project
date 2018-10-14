@@ -25,15 +25,18 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        $category = $request->category;
+        $title = $category == 'gm' ? "Game Masters" : "Players";
+
         if ($name = $request->name) {
-            $users = User::where('name', 'LIKE', '%' . $name . '%')->paginate(25);
+            $users = User::where('front_user_type', $category == 'gm' ? 'teacher' : 'student')->where('name', 'LIKE', '%' . $name . '%')->paginate(25);
         } else {
-            $users = User::paginate(25);
+            $users = User::where('front_user_type', $category == 'gm' ? 'teacher' : 'student')->paginate(25);
         }
         $pagination = $users->appends($request->except('page'))->links();
 
         return view('admin/users/index')
-            ->with('title', 'Users')
+            ->with('title', $title)
             ->with('menu', 'users')
             ->with('data', $users)
             ->with('pagination', $pagination);

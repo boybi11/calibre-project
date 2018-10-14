@@ -9,9 +9,9 @@ export function connect(showLog = true){
 	});
 	instance.interceptors.response.use(function (response) {
 		// Do something with response data
-		if (response.data.message && showLog) {
-			toastr.success(response.data.message);
-		}
+		// if (response.data.message && showLog) {
+		// 	toastr.success(response.data.message);
+		// }
 		//only return the data
 		return response.data;
 	}, function (error) {

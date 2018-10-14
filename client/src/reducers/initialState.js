@@ -5,7 +5,8 @@ export default {
 	samples: {
 		list : [],
 		selected : {}
-	},
+    },
+    leagues: [],
     todos: [
     {   id: 0,
         text: 'learn react'
