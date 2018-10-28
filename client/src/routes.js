@@ -11,6 +11,7 @@ import Login from './modules/login/Login';
 import Logout from './modules/login/Logout';
 import Posts from './modules/posts/Posts';
 import Leagues from './modules/leagues/Leagues';
+import LeagueView from './modules/leagues/LeagueView';
 import ManagePost from './modules/posts/ManagePost';
 import Samples from './modules/samples/Samples';
 import ManageSample from './modules/samples/ManageSample';
@@ -44,6 +45,7 @@ export default (
 			<Route path="sample" component={ManageSample} />
 			<Route path="sample/:id" component={ManageSample} />
 			<Route path="leagues" component={Leagues} />
+			<Route path="league/:slug" component={LeagueView} />
 			<Route path="tasks" component={Tasks} />
 			<Route path="todo" component={ManageToDo} />
 

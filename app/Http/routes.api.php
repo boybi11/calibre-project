@@ -32,5 +32,13 @@ Route::post('api/products/update', array('as'=>'apiProductsUpdate','uses'=>'Prod
 Route::post('api/products/destroy', array('as'=>'apiProductsDestroy','uses'=>'ProductController@destroy', 'middleware'=>'cors'));
 
 Route::get('api/classes/get_list', array('as'=>'apiClassesList','uses'=>'ClassController@getList', 'middleware'=>['api','cors']));
+Route::get('api/classes/get_leagues', array('as'=>'apiClassesLeagues','uses'=>'ClassController@getLeagues', 'middleware'=>['api','cors']));
+Route::get('api/classes/find_list', array('as'=>'apiClassesFind','uses'=>'ClassController@findList', 'middleware'=>['api','cors']));
 Route::post('api/classes/create', array('as'=>'apiClassesCreate','uses'=>'ClassController@create', 'middleware'=>['api','cors']));
 Route::post('api/classes/delete', array('as'=>'apiClassesDelete','uses'=>'ClassController@delete', 'middleware'=>['api','cors']));
+Route::get('api/classes/get_tasks', array('as'=>'apiClassesTasks','uses'=>'ClassController@getTasks', 'middleware'=>['api','cors']));
+Route::post('api/classes/add_task', array('as'=>'apiClassesTasksCreate','uses'=>'ClassController@addTask', 'middleware'=>['api','cors']));
+Route::post('api/classes/join', array('as'=>'apiClassesJoin','uses'=>'ClassController@join', 'middleware'=>['api','cors']));
+Route::post('api/classes/accept_user', array('as'=>'apiClassesAcceptUser','uses'=>'ClassController@acceptUser', 'middleware'=>['api','cors']));
+Route::post('api/classes/remove_user', array('as'=>'apiClassesremoveUser','uses'=>'ClassController@removeUser', 'middleware'=>['api','cors']));
+Route::post('api/classes/complete_task', array('as'=>'apiClassesComplete','uses'=>'ClassController@completeTask', 'middleware'=>['api','cors']));

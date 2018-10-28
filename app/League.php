@@ -20,4 +20,12 @@ class League extends Authenticatable
     public function user() {
         return $this->hasOne('App\User', 'id', 'gm_id');
     }
+
+    public function players() {
+        return $this->belongsToMany('App\User')->withPivot('status');
+    }
+
+    public function tasks() {
+        return $this->hasMany('App\Task', 'league_id');
+    }
 }

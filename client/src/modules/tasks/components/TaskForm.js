@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 
-const TaskForm = ({submitForm, toggleForm, formMode}) => {
+const TaskForm = ({submitForm, toggleForm, formMode, textChangeHandle, data, show}) => {
 	return(
-		<div id="taskForm" className="form-overlay">
-			<div className="form-box">
+		<div id="taskForm" className={(show && 'in') + " form-overlay modal"}>
+			<div className="form-box modal-box">
 				<h3 className="title">
-					{formMode == 'add' ? 'Add a' : 'Edit'} quest
+					{formMode == 'add' ? 'Create a' : 'Edit'} task
 				</h3>
 				<div className="form">
 					<div className="form-group">
@@ -13,7 +13,13 @@ const TaskForm = ({submitForm, toggleForm, formMode}) => {
 							Title
 						</div>
 						<div>
-							<input type="text" className="form-control" />
+                            <input
+                                name="title"
+                                type="text"
+                                className="form-control"
+                                onChange={(e) => textChangeHandle(e)}
+                                value={data.title}
+                            />
 						</div>
 					</div>
 					<div className="form-group">
@@ -21,15 +27,26 @@ const TaskForm = ({submitForm, toggleForm, formMode}) => {
 							Description
 						</div>
 						<div>
-							<textarea className="form-control" />
+                            <textarea
+                                name="description"
+                                className="form-control"
+                                onChange={(e) => textChangeHandle(e)}
+								value={data.description}
+							/>
 						</div>
 					</div>
 					<div className="form-group">
 						<div>
-							Duration (in days)
+							Duration
 						</div>
 						<div>
-							<input type="text" className="form-control" />
+                            <input
+                                name="duration"
+                                type="text"
+                                className="form-control"
+                                onChange={(e) => textChangeHandle(e)}
+                                value={data.duration}
+                            />
 						</div>
 					</div>
 					<div className="form-group">
@@ -37,7 +54,13 @@ const TaskForm = ({submitForm, toggleForm, formMode}) => {
 							Exp Reward
 						</div>
 						<div>
-							<input type="text" className="form-control" />
+                            <input
+                                name="exp"
+                                type="text"
+                                className="form-control"
+                                onChange={(e) => textChangeHandle(e)}
+                                value={data.exp}
+                            />
 						</div>
 					</div>
 					<div className="form-group">
@@ -45,12 +68,18 @@ const TaskForm = ({submitForm, toggleForm, formMode}) => {
 							Points Reward
 						</div>
 						<div>
-							<input type="text" className="form-control" />
+                            <input
+                                name="points"
+                                type="text"
+                                className="form-control"
+                                onChange={(e) => textChangeHandle(e)}
+                                value={data.points}
+                            />
 						</div>
 					</div>
 					<div className="flex align-center">
 						<button
-							className="btn btn-clear white flex-1 margin-right"
+							className="btn btn-danger flex-1 margin-right"
 							onClick={() => toggleForm(false)}
 						>
 							cancel

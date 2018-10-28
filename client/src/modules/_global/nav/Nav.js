@@ -29,8 +29,8 @@ export class Nav extends React.Component {
 			<div className="flex header-menu">
 				<div className="flex-auto padded-10 pad-sides-50 avatar-container flex flex-align-center">
 					<img
-						className="thumb-50"
-						src={require('assets/img/avatars/ar.gif')}
+						className="thumb-75"
+						src={require('assets/img/avatars/kn.png')}
 					/>
 				</div>
 				<div className="flex-1 overflow-hidden flex flex-direction-column">
@@ -181,18 +181,28 @@ export class Nav extends React.Component {
 					<div className="side-links">
 						<ul>
 							<li>
-								<Link to="/leagues">
+								<Link to="/" onClick={() => this.toggleMenu()}>
+									<i className="fas fa-home" /> Dashboard
+								</Link>
+							</li>
+							<li>
+								<Link to="/leagues" onClick={() => this.toggleMenu()}>
 									<i className="fas fa-users" /> Leagues
 								</Link>
 							</li>
 							<li>
-								<Link to="/leagues">
+								<Link to="/leagues" onClick={() => this.toggleMenu()}>
 									<i className="fas fa-tasks" /> Quests
 								</Link>
 							</li>
 							<li>
-								<Link to="/leagues">
+								<Link to="/leagues" onClick={() => this.toggleMenu()}>
 									<i className="far fa-user" /> Profile
+								</Link>
+							</li>
+							<li>
+								<Link to="/logout" onClick={() => this.toggleMenu()}>
+								<i className="fas fa-sign-out-alt" /> Log out
 								</Link>
 							</li>
 						</ul>

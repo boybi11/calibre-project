@@ -57,7 +57,7 @@ button
 		text-align justify
 	
 	&-success
-		color #93d07a
+		color #54ad6f
 		
 	&-warning
 		color #ef9638
@@ -286,7 +286,7 @@ button
 		background-color #67a0bf
 	
 	&-success
-		background-color #93d07a
+		background-color #54ad6f
 		
 	&-warning
 		background-color #ef9638
@@ -636,10 +636,20 @@ button
 		box-shadow 0 5px 10px 0 rgba(0,0,0,.2)
 		
 		.avatar-container
-			background-color #000
+			background linear-gradient(#eee, #aaa)
 			// background-image url('../img/bgs/test_bg.jpg')
 			background-size cover
 			background-position center
+
+			img
+				height 150px
+				width 75px
+				object-fit contain
+				object-position center
+				animation-name breathe 
+				animation-duration 1.5s
+				animation-iteration-count infinite
+				transform-origin 50% 100%
 		
 		.menu-container
 			background rgba(0,0,0,.2);
@@ -687,16 +697,56 @@ button
 	color #ffffff
 
 	.league-list
-		flex-wrap wrap
+		color #111111
+		background #fff
+		border-radius 5px
+		padding 40px 20px
 
+	.league-list,
+	.tasks-list
+		flex-wrap wrap
+		margin-top 20px
+		
 		.wrap-1-3
 			width 33.33%
+			animation-name fadeIn
+			animation-duration .7s
+			animation-fill-mode forwards
+			opacity 0
 
 			.card
 				border-radius 5px
 				padding 20px
-				box-shadow 0 5px 10px 0 rgba(0, 0, 0, 0.1), 0 0 0 1px #ccc
+				box-shadow 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 0 1px #111
 				margin 10px
+				background #fff
+				color #111111
+				position relative
+				overflow hidden
+
+				.loader
+					position absolute
+					width 100%
+					height 100%
+					background rgba(0, 0, 0, 0.2)
+					display flex
+					align-items center
+					justify-content center
+					z-index 3
+					
+				.bg-icon
+					position absolute
+					right 0
+					bottom 0
+					transform scale(10)
+					opacity 0.3
+
+				i.fa-galactic-republic,
+				i.fa-tasks
+					color #aaa !important
+					font-size 18px
+					margin-top 3px
+					margin-right 10px !important
 
 				.task-actions
 					opacity 0
@@ -705,17 +755,45 @@ button
 
 				.league-name
 					font-size 18px
-
-					i
-						color #aaa
 				
 				.gm-name
 					margin-top 5px
+
+				.gm-date
+					font-size 10px
+					opacity 0.8
+
+				.description
+					 font-size 15px
+				
+				.status-part
+					position absolute
+					right 10px
+					bottom 10px
+
+					i
+						font-size: 12px;
+						font-weight: 700;
+						line-height: 1;
+						color: #fff !important;
+						margin: 0 5px 0 0!important;
+
+				.sm-label
+					opacity 0.5
+					font-size 0.8em
 
 				&:hover
 					.task-actions
 						opacity 1
 						transform translateY(0%)
+	.tasks-list
+
+		.wrap-1-3
+
+			.card
+				background #333
+				color #fff
+				min-height 250px
 
 .tasks-page
 	background-size cover
@@ -846,4 +924,124 @@ button
 
 	&.in
 		display flex
+
+
+.default-tab
+	margin-top 30px
+	color #111111
+
+	.tab-headers
+		.tab
+			padding 10px 25px
+			font-size 16px
+			border-radius 5px 5px 0 0
+			color #ffffff
+			cursor pointer
+			transition .2s
+
+			&.active
+				color #111111
+				background #ffffff
+
+	.tab-panel
+		background #ffffff
+		padding 25px
+		border-radius 0 5px 5px 5px
+
+		.tab-pane
+			display none
+
+			&.active
+				display block
+
+.empty-message
+	text-align center
+	padding 30px
+	border 2px dashed #cccccc
+	font-size 18px
+	width 100%
+	cursor pointer
+
+.search-control
+		min-width 500px
+
+.player-card
+	padding 15px
+	color #ffffff
+	background #333
+	border-radius 5px
+	margin-top 10px
+	position relative
+	overflow hidden
+	animation-name floatRight
+	animation-duration .7s
+	animation-fill-mode forwards
+	opacity 0
+
+	.bg-icon
+		position absolute
+		right 0
+		bottom 0
+		transform scale(10) translateY(-10%)
+		opacity 0.3
+	.dp
+		border-radius 100%
+		overflow hidden
+		
+		img
+			width 80px
+			height 80px
+
+	.player-email
+		font-size 10px
+		opacity 0.8
+
+	.player-actions
+		opacity 0
+		transform translateY(-20%)
+		transition .2s
+		&.pending
+			transform translateY(0%)
+			opacity 1
+
+	&:hover
+		.player-actions
+			transform translateY(0%)
+			opacity 1
+
+.label
+	letter-spacing 1px
+	font-weight normal
+
+.shrink
+	transform scale(0)
+
+.badge
+	padding 5px
+	font-size 12px
 @import '../../modules/**/*.styl';
+
+
+@keyframes breathe
+	from,
+	to
+		transform scale(1)
+	
+	50%
+		transform scale(1, 1.01)
+
+@keyframes fadeIn 
+	from
+		opacity 0
+		transform translateY(-20%)
+	to
+		opacity 1
+		transform translateY(0%)
+
+@keyframes floatRight  
+	from
+		opacity 0
+		transform translateX(-10%)
+	to
+		opacity 1
+		transform translateX(0%)
