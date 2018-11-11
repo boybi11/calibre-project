@@ -70,6 +70,17 @@ export function getTasks(slug) {
 	};
 }
 
+export function getTask(id) {
+	return function (dispatch) {
+		return apiHelper.connect().get('/classes/get_task?id=' + id)
+			.then(res => {
+				return res;
+			}).catch(error => {
+				throw(error);
+			});
+	};
+}
+
 export function addTask(data) {
 	return function (dispatch) {
 		return apiHelper.connect().post('/classes/add_task', data)
@@ -128,6 +139,17 @@ export function removeUser(data) {
 export function completeTask(data) {
 	return function (dispatch) {
 		return apiHelper.connect().post('/classes/complete_task', data)
+			.then(res => {
+				return res;
+			}).catch(error => {
+				throw(error);
+			});
+	};
+}
+
+export function finishTask(data) {
+	return function (dispatch) {
+		return apiHelper.connect().post('/classes/finish_task', data)
 			.then(res => {
 				return res;
 			}).catch(error => {

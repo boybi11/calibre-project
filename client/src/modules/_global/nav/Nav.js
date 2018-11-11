@@ -12,6 +12,32 @@ export class Nav extends React.Component {
 		};
 
 		this.toggleMenu = this.toggleMenu.bind(this);
+		this.setWrapperRef = this.setWrapperRef.bind(this);
+		this.handleClickOutside = this.handleClickOutside.bind(this);
+	}
+
+	componentDidMount() {
+		document.addEventListener('mousedown', this.handleClickOutside);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('mousedown', this.handleClickOutside);
+	}
+
+	/**
+   * Set the wrapper ref
+   */
+	setWrapperRef(node) {
+		this.wrapperRef = node;
+	}
+
+	/**
+	 * Alert if clicked on outside of element
+	 */
+	handleClickOutside(event) {
+		if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+			this.setState({menu: 'out'});
+		}
 	}
 
 	toggleMenu() {
@@ -26,11 +52,11 @@ export class Nav extends React.Component {
 
 	render() {
 		return (
-			<div className="flex header-menu">
+			<div className="flex header-menu" ref={this.setWrapperRef}>
 				<div className="flex-auto padded-10 pad-sides-50 avatar-container flex flex-align-center">
 					<img
 						className="thumb-75"
-						src={require('assets/img/avatars/kn.png')}
+						src={require('assets/img/avatars/sq.png')}
 					/>
 				</div>
 				<div className="flex-1 overflow-hidden flex flex-direction-column">
@@ -196,7 +222,7 @@ export class Nav extends React.Component {
 								</Link>
 							</li>
 							<li>
-								<Link to="/leagues" onClick={() => this.toggleMenu()}>
+								<Link to="/profile" onClick={() => this.toggleMenu()}>
 									<i className="far fa-user" /> Profile
 								</Link>
 							</li>

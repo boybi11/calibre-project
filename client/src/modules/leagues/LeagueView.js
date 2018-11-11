@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router'
 import * as leagueActions from './league.actions';
 import CTooltip from '../_global/CTooltip';
 import TaskForm from '../tasks/components/TaskForm';
+import TaskView from '../tasks/components/TaskView';
 import Loader from '../_global/Loader';
 import * as textHelper from '../../helpers/text_helpers';
 
@@ -17,6 +18,7 @@ class LeagueView extends Component {
 		this.state = {
 			league: {},
 			showForm: false,
+			showView: false,
 			formMode: 'add',
 			sort: '',
 			filter: '',
@@ -25,18 +27,27 @@ class LeagueView extends Component {
 				description: "",
 				duration: "",
 				exp: "",
-				points: ""
+				points: "",
+				badge_reward: "",
+				badge_leader: ""
 				
 			},
 			tab: 'tasks',
-			loading: true
+			loading: true,
+			selectedTask: {}
 		};
 
 		this.textChangeHandle = this.textChangeHandle.bind(this);
 		this.submitForm = this.submitForm.bind(this);
 		this.toggleForm = this.toggleForm.bind(this);
+		this.toggleView = this.toggleView.bind(this);
 		this.acceptUser = this.acceptUser.bind(this);
 		this.complete = this.complete.bind(this);
+		this.handleUserScore = this.handleUserScore.bind(this);
+		this.selectBadge = this.selectBadge.bind(this);
+		this.processPlayerScore = this.processPlayerScore.bind(this);
+		this.finishTask = this.finishTask.bind(this);
+		this.toggleTab = this.toggleTab.bind(this);
 	}
 
 	componentDidMount() {
@@ -45,27 +56,50 @@ class LeagueView extends Component {
 		});
 	}
 
-	submitForm() {
-		this.setState({loading: true});
-		let data = Object.assign({}, this.state.data);
-		data['league_id'] = this.state.league.id;
-		this.props.actions.addTask(data).then(res => {
-			this.props.actions.getTasks(this.props.params.slug).then((res) => {
+	toggleTab(tab) {
+		this.setState({tab});
+		this.props.actions.getTasks(this.props.params.slug).then((res) => {
+			this.setState({loading: false, league: res.data});
+		});
+	}
 
-				this.setState({
-					loading: false,
-					league: res.data
+	submitForm() {
+		let data = Object.assign({}, this.state.data);
+
+		let validation = Object.keys(data).filter(key => {
+			return data[key] == "";
+		});
+		
+		if(validation.length > 0) {
+			alert("Fill in all the form fields");
+		} else {
+			this.setState({loading: true});
+			data['league_id'] = this.state.league.id;
+			this.props.actions.addTask(data).then(res => {
+				this.props.actions.getTasks(this.props.params.slug).then((res) => {
+
+					this.setState({
+						loading: false,
+						league: res.data
+					});
 				});
 			});
-		});
 
-		this.toggleForm(false);
+			this.toggleForm(false);
+		}
 	}
 
 	textChangeHandle(e) {
 		let data = Object.assign({}, this.state.data);
 
 		data[e.target.name] = e.target.value;
+		this.setState({ data });
+	}
+
+	selectBadge(type, badge) {
+		let data = Object.assign({}, this.state.data);
+
+		data[type] = badge;
 		this.setState({ data });
 	}
 
@@ -78,9 +112,44 @@ class LeagueView extends Component {
 				description: "",
 				duration: "",
 				exp: "",
-				points: ""
+				points: "",
+				badge_leader: "",
+				badge_reward: ""
 			}
 		});
+	}
+
+	toggleView(state, task) {
+		this.setState({loading: true});
+		if(task != undefined) {
+			this.props.actions.getTask(task.id).then(res => {
+				let players = res.data.league.players;
+	
+				res.data.users.map(user => {
+					let find = players.find(player => {
+						return player.id == user.id;
+					});
+	
+					if(find) {
+						find.task_status = user.pivot.status;
+						find.score = user.pivot.score;
+					}
+				});
+	
+				res.data.users = players;
+				
+				this.setState({
+					showView: state,
+					selectedTask: this.processTask(res.data),
+					loading: false
+				});
+			});
+		} else {
+			this.setState({
+				showView: false,
+				loading: false
+			});
+		}
 	}
 
 	acceptUser(user) {
@@ -140,17 +209,17 @@ class LeagueView extends Component {
 
 	alphaAZ(a,b) {
 		if (a.title < b.title)
-		  return -1;
+			return -1;
 		if (a.title > b.title)
-		  return 1;
+			return 1;
 		return 0;
 	}
 
 	alphaZA(a,b) {
 		if (a.title > b.title)
-		  return -1;
+			return -1;
 		if (a.title < b.title)
-		  return 1;
+			return 1;
 		return 0;
 	}
 
@@ -158,9 +227,9 @@ class LeagueView extends Component {
 		const endDateA = moment(moment(a.created_at).format('YYYY-MM-DD 23:59:59')).add(a.duration, 'days');
 		const endDateB = moment(moment(b.created_at).format('YYYY-MM-DD 23:59:59')).add(b.duration, 'days');
 		if (endDateA.isSameOrAfter(endDateB))
-		  return 1;
+			return 1;
 		if (endDateA.isSameOrBefore(endDateB))
-		  return -1;
+			return -1;
 		return 0;
 	}
 
@@ -168,62 +237,121 @@ class LeagueView extends Component {
 		const endDateA = moment(moment(a.created_at).format('YYYY-MM-DD 23:59:59')).add(a.duration, 'days');
 		const endDateB = moment(moment(b.created_at).format('YYYY-MM-DD 23:59:59')).add(b.duration, 'days');
 		if (endDateA.isSameOrAfter(endDateB))
-		  return -1;
+			return -1;
 		if (endDateA.isSameOrBefore(endDateB))
-		  return 1;
+			return 1;
 		return 0;
 	}
 
 	expASC(a,b) {
 		if (a.exp < b.exp)
-		  return -1;
+			return -1;
 		if (a.exp > b.exp)
-		  return 1;
+			return 1;
 		return 0;
 	}
 
 	expDSC(a,b) {
 		if (a.exp > b.exp)
-		  return -1;
+			return -1;
 		if (a.exp < b.exp)
-		  return 1;
+			return 1;
 		return 0;
 	}
 
 	ptsASC(a,b) {
 		if (a.points < b.points)
-		  return -1;
+			return -1;
 		if (a.points > b.points)
-		  return 1;
+			return 1;
 		return 0;
 	}
 
 	ptsDSC(a,b) {
 		if (a.points > b.points)
-		  return -1;
+			return -1;
 		if (a.points < b.points)
-		  return 1;
+			return 1;
 		return 0;
 	}
 
-	complete(task) {
-		let league = Object.assign({}, this.state.league);
-		const data = {
-			task: task.id,
-			player: this.props.user.id,
-			status: this.props.user.front_user_type,
-			score: 0
+	processPlayerScore(player) {
+		player.total_score = 0;
+		
+		if(player.tasks.length > 0) {
+			player.tasks.map(task => {
+				if(task.league.id == this.state.league.id) {
+					player.total_score += parseFloat(task.points) * (parseFloat(task.pivot.score) / 100);
+				}
+			});
 		}
 
-		let find = league.tasks.find(task_f => {
-			return task.id == task_f.id;
-		});
+		return player;
+	}
 
+	finishTask(task) {
+		let league = Object.assign({}, this.state.league);
+
+		const data = {
+			teacher: this.props.user.id,
+			task
+		};
+
+		let find = league.tasks.find(task_f => {
+			return task == task_f.id;
+		});
+		
 		if(find) {
 			find.loading = true;
 		}
 
 		this.setState({league});
+		this.props.actions.finishTask(data).then(res => {
+			let find = league.tasks.find(task_f => {
+				return task == task_f.id;
+			});
+			
+			if(find) {
+				find.loading = false;
+				find.status = "completed";
+			}
+	
+			this.setState({league});
+		});
+	}
+
+	complete(task, score, player) {
+		score = score != undefined ? score : 0;
+
+		let league = Object.assign({}, this.state.league);
+		let selectedTask = Object.assign({}, this.state.selectedTask);
+
+		const data = {
+			task: task.id,
+			player: player == undefined ? this.props.user.id : player,
+			status: this.props.user.front_user_type,
+			score
+		};
+
+		let find = league.tasks.find(task_f => {
+			return task.id == task_f.id;
+		});
+		
+		if(find) {
+			find.loading = true;
+		}
+
+		if(player != undefined) {
+			let find_p = selectedTask.users.find(player_f => {
+				return player == player_f.id;
+			});
+			
+			if(find_p) {
+				find_p.loading = true;
+			}
+		}
+
+		this.setState({league, selectedTask});
 		this.props.actions.completeTask(data).then(res => {
 			let find = league.tasks.find(task_f => {
 				return task.id == task_f.id;
@@ -234,8 +362,44 @@ class LeagueView extends Component {
 				find.currentUserState = Object.assign({}, this.props.user);
 			}
 
+			if(player != undefined) {
+				let find_p = selectedTask.users.find(player_f => {
+					return player == player_f.id;
+				});
+				
+				if(find_p) {
+					find_p.loading = false;
+					find_p.task_status = data.status;
+					find_p.score = data.score;
+				}
+			}
+
 			this.setState({league});
 		});
+	}
+
+	handleUserScore(e, user) {
+		let score = e.target.value;
+		let selectedTask = Object.assign({}, this.state.selectedTask);
+		let find = selectedTask.users.find(search => {
+			return search.id == user.id;
+		});
+		
+		if(find) {
+			if(isNaN(score)) {
+				score = 0;
+			} else {
+				if(parseFloat(score) > 100) {
+					score = 100;
+				} else if(parseFloat(score) < 0) {
+					score = 0;
+				}
+			}
+
+			find.score = score;
+		}
+
+		this.setState({selectedTask});
 	}
 
 	render() {
@@ -286,7 +450,24 @@ class LeagueView extends Component {
 							break;
 			}
 		}
+
 		
+		if(league.players != undefined) {
+			league.players.map(player => {
+				player = this.processPlayerScore(player);
+			});
+
+			league.players = league.players.sort((a, b) => {
+				a.total_score = a.total_score ? a.total_score : 0;
+				b.total_score = b.total_score ? b.total_score : 0;
+		
+				if (parseFloat(a.total_score) > parseFloat(b.total_score))
+					return -1;
+				if (parseFloat(a.total_score) < parseFloat(b.total_score))
+					return 1;
+				return 0;
+			});
+		}
 		return (
 			<div className="leagues-page">
 				<div className="tasks-board flex">
@@ -298,15 +479,15 @@ class LeagueView extends Component {
 							<div className="tab-headers flex align-center">
 								<div
 									className={`tab ${this.state.tab == 'tasks' ? 'active' : ''}`}
-									onClick={() => this.setState({tab: 'tasks'})}
+									onClick={() => this.toggleTab('tasks')}
 								>
-									Tasks
+									Quests
 								</div>
 								<div
 									className={`tab ${this.state.tab == 'users' ? 'active' : ''}`}
-									onClick={() => this.setState({tab: 'users'})}
+									onClick={() => this.toggleTab('users')}
 								>
-									Users
+									Players
 								</div>
 							</div>
 							<div className="tab-panel">
@@ -358,7 +539,7 @@ class LeagueView extends Component {
 												(
 													<div className="task-actions">
 														<CTooltip
-															title="Add League"
+															title="Add quest"
 															placement="top"
 														>
 															<div
@@ -380,6 +561,32 @@ class LeagueView extends Component {
 												league.tasks.map((task, index) => {
 													return (
 														<div className="wrap-1-3" style={{animationDelay: ((index + 1) * 0.2) + 's'}}>
+															<div className="badge-container">
+																<CTooltip
+																	title="Badge Reward"
+																	placement="top"
+																>
+																	{
+																		task.badge_reward ? (
+																			<img src={require(`assets/img/badges/${task.badge_reward}.png`)} />
+																		) : (
+																			<div className="empty-img" />
+																		)
+																	}
+																</CTooltip>
+																<CTooltip
+																	title="Leaderboard Badge"
+																	placement="top"
+																>
+																	{
+																		task.badge_leader ? (
+																			<img src={require(`assets/img/badges/${task.badge_leader}.png`)} />
+																		) : (
+																			<div className="empty-img" />
+																		)
+																	}
+																</CTooltip>
+															</div>
 															<div className="card flex flex-direction-column" key={task.id}>
 																<div className="bg-icon">
 																	<i className="fas fa-tasks"></i>
@@ -387,7 +594,7 @@ class LeagueView extends Component {
 																{
 																	task.loading && (
 																		<div className="loader">
-																			<i className="fas fa-circle-notch fa-spin"  style={{fontSize: "20px"}}/>
+																			<i className="fas fa-circle-notch fa-spin"	style={{fontSize: "20px"}}/>
 																		</div>
 																	)
 																}
@@ -408,8 +615,8 @@ class LeagueView extends Component {
 																				{moment(task.created_at).format('MMM D, Y') + ' - ' + moment(task.created_at).add(task.duration, 'days').format('MMM D, Y')}
 																			</div>
 																			<div>
-																				<div className={`label bg-${task.onGoing ? (task.currentUserState ? 'success' : 'primary') : 'danger'}`}>
-																					{task.onGoing ? (task.currentUserState ? 'complete' : 'on-going') : 'ended'}
+																				<div className={`label bg-${task.status == 'completed' ? 'success' : (task.onGoing ? (task.currentUserState ? 'success' : 'primary') : 'danger')}`}>
+																					{task.status == 'completed' ? 'finished' : (task.onGoing ? (task.currentUserState ? 'completed' : 'on-going') : 'ended')}
 																				</div>
 																			</div>
 																			<div className="description margin-top-10 flex-1">
@@ -439,15 +646,27 @@ class LeagueView extends Component {
 																			<div
 																				className="btn-xs bg-primary hover-opacity transitioned text-center margin-bottom"
 																				role="button"
-																				onClick={() => browserHistory.push({pathname: '/league/' + task.slug})}
+																				onClick={() => this.toggleView('in', task)}
 																			>
 																				View
 																			</div>
 																			{
+																				(this.props.user.front_user_type == "teacher" && task.status != 'completed') &&
+																				(
+																					<div
+																						className="btn-xs bg-success text-center hover-opacity transitioned margin-bottom"
+																						role="button"
+																						onClick={() => this.finishTask(task.id)}
+																					>
+																						Finish
+																					</div>
+																				)
+																			}
+																			{
 																				(this.props.user.front_user_type == "teacher") &&
 																				(
 																					<div
-																						className="btn-xs bg-danger hover-opacity transitioned"
+																						className="btn-xs bg-danger text-center hover-opacity transitioned"
 																						role="button"
 																						onClick={() => this.archive(task.id)}
 																					>
@@ -456,7 +675,7 @@ class LeagueView extends Component {
 																				)
 																			}
 																			{
-																				(this.props.user.front_user_type == "student") &&
+																				(this.props.user.front_user_type == "student" && task.onGoing && task.status != 'complete') &&
 																				(
 																					<div
 																						className={`btn-xs bg-success hover-opacity transitioned ${(task.onGoing) && (task.currentUserState) && 'shrink'}`}
@@ -487,63 +706,71 @@ class LeagueView extends Component {
 								<div className={`tab-pane ${this.state.tab == 'users' ? 'active' : ''}`}>
 									{
 										Object.keys(this.state.league).length > 0 && this.state.league.players.length > 0 ? (
-											this.state.league.players.map((player, index) => {
+											league.players.map((player, index) => {
 												return (
-													<div className="player-card flex flex-align-center" style={{animationDelay: (0.2 * (index + 1)) + 's'}}>
-														<div className="bg-icon">
-															<i className="fas fa-user-astronaut"/>
+													<div>
+														<div className={"task-status bg-success"}>
+															{player.total_score}
 														</div>
-														<div className="dp">
-															<img src={require('assets/img/log.jpg')} />
-														</div>
-														<div className="fullname margin-left-20 flex-1">
-															<div className="player-name">
-																{player.first_name + " " + player.last_name}
+														<div className="player-card flex flex-align-center margin-none" style={{animationDelay: (0.2 * (index + 1)) + 's'}}>
+															<div className="rank-number">
+																{index + 1}
 															</div>
-															<div className="player-email">
-																{player.email}
+															<div className="bg-icon">
+																<i className="fas fa-user-astronaut"/>
 															</div>
-															<div className={`label bg-${player.pivot.status == "pending" ? "warning" : "primary"}`}>
-																{player.pivot.status == 'accepted' ? 'active' : player.pivot.status}
+															<div className="dp">
+																<img src={require('assets/img/log.jpg')} />
 															</div>
-															<div className="player-email margin-top-20">
-																<div>
-																	Last logged in:
+															<div className="fullname margin-left-20 flex-1">
+																<div className="player-name">
+																	{player.first_name + " " + player.last_name}
 																</div>
-																{moment(player.last_login).format('LLL')}
-															</div>
-														</div>
-														{
-															player.loading != undefined && player.loading ? (
-																<div>
-																	<i className="fas fa-circle-notch fa-spin"  style={{fontSize: "20px"}}/>
+																<div className="player-email">
+																	{player.email}
 																</div>
-															) : (
-																this.props.user.front_user_type == 'teacher' && (
-																	<div className={`player-actions ${player.pivot.status}`}>
-																		<div>
-																			{
-																				
-																				player.pivot.status == 'pending' && (
-																					<button
-																						className="btn btn-sm btn-success"
-																						onClick={() => this.acceptUser(player)}
-																					>
-																						Accept
-																					</button>
-																				)
-																			}
-																			<button
-																				className="btn btn-sm btn-danger margin-left-10"
-																				onClick={() => this.removeUser(player)}
-																			>
-																				{player.pivot.status == 'pending' ? 'Reject' : 'Kick'}
-																			</button>
-																		</div>
-																	</div>	
+																<div className={`label bg-${player.pivot.status == "pending" ? "warning" : "primary"}`}>
+																	{player.pivot.status == 'accepted' ? 'active' : player.pivot.status}
+																</div>
+																<div className="player-email margin-top-20">
+																	<div>
+																		Last logged in:
+																	</div>
+																	{moment(player.last_login).format('LLL')}
+																</div>
+															</div>
+															{
+																player.loading != undefined && player.loading ? (
+																	<div>
+																		<i className="fas fa-circle-notch fa-spin"	style={{fontSize: "20px"}}/>
+																	</div>
+																) : (
+																	this.props.user.front_user_type == 'teacher' && (
+																		<div className={`player-actions ${player.pivot.status}`}>
+																			<div>
+																				{
+																					
+																					player.pivot.status == 'pending' && (
+																						<button
+																							className="btn btn-sm btn-success"
+																							onClick={() => this.acceptUser(player)}
+																						>
+																							Accept
+																						</button>
+																					)
+																				}
+																				<button
+																					className="btn btn-sm btn-danger margin-left-10"
+																					onClick={() => this.removeUser(player)}
+																				>
+																					{player.pivot.status == 'pending' ? 'Reject' : 'Kick'}
+																				</button>
+																			</div>
+																		</div>	
+																	)
 																)
-															)
-														}
+															}
+														</div>
 													</div>
 												)
 											})
@@ -565,6 +792,18 @@ class LeagueView extends Component {
 					show={this.state.showForm}
 					textChangeHandle={this.textChangeHandle}
 					data={this.state.data}
+					selectBadge={this.selectBadge}
+				/>
+				<TaskView
+					submitForm={this.submitForm}
+					toggleView={this.toggleView}
+					formMode={this.state.formMode}
+					show={this.state.showView}
+					textChangeHandle={this.handleUserScore}
+					task={this.state.selectedTask}
+					fe_type={this.props.user.front_user_type}
+					complete={this.complete}
+					user={this.props.user.id}
 				/>
 				<Loader loading={this.state.loading} />
 			</div>

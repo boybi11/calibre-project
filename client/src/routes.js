@@ -12,6 +12,7 @@ import Logout from './modules/login/Logout';
 import Posts from './modules/posts/Posts';
 import Leagues from './modules/leagues/Leagues';
 import LeagueView from './modules/leagues/LeagueView';
+import ProfileView from './modules/user/ProfileView';
 import ManagePost from './modules/posts/ManagePost';
 import Samples from './modules/samples/Samples';
 import ManageSample from './modules/samples/ManageSample';
@@ -48,7 +49,7 @@ export default (
 			<Route path="league/:slug" component={LeagueView} />
 			<Route path="tasks" component={Tasks} />
 			<Route path="todo" component={ManageToDo} />
-
+			<Route path="profile" component={ProfileView} />
 			<Route path="page-not-found" component={PageNotFound} />
 		</Route>
 		<Route component={LayoutBlank}>

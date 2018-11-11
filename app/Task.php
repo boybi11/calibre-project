@@ -19,11 +19,18 @@ class Task extends Authenticatable
         'duration',
         'exp',
         'points',
-        'status'
+        'status',
+        'badge_leader',
+        'badge_reward'
     ];
 
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User')->withPivot(['status', 'score']);
+    }
+
+    public function league()
+    {
+        return $this->hasOne('App\League', 'id', 'league_id');
     }
 }

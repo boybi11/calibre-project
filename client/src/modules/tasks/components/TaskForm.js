@@ -1,11 +1,17 @@
 import React, {PropTypes} from 'react';
 
-const TaskForm = ({submitForm, toggleForm, formMode, textChangeHandle, data, show}) => {
+const TaskForm = ({submitForm, toggleForm, formMode, textChangeHandle, data, show, selectBadge}) => {
+	const badges = {
+		bdg_1: require('assets/img/badges/bdg_1.png'),
+		bdg_2: require('assets/img/badges/bdg_2.png'),
+		bdg_3: require('assets/img/badges/bdg_3.png')
+	};
+
 	return(
 		<div id="taskForm" className={(show && 'in') + " form-overlay modal"}>
 			<div className="form-box modal-box">
 				<h3 className="title">
-					{formMode == 'add' ? 'Create a' : 'Edit'} task
+					{formMode == 'add' ? 'Create a' : 'Edit'} quest
 				</h3>
 				<div className="form">
 					<div className="form-group">
@@ -75,6 +81,50 @@ const TaskForm = ({submitForm, toggleForm, formMode, textChangeHandle, data, sho
                                 onChange={(e) => textChangeHandle(e)}
                                 value={data.points}
                             />
+						</div>
+					</div>
+					<div className="form-group">
+						<div>
+							Badge Reward
+						</div>
+						<div>
+                            <div className="bdg-holder">
+								{
+									Object.keys(badges).map((badge) => {
+										return(
+											<div
+												className={`badge-option ${data.badge_reward == badge ? 'selected' : ''}`}
+												onClick={() => selectBadge("badge_reward", badge)}
+											>
+												<img src={badges[badge]} />
+												<i className="fas fa-check-square indicator" />
+											</div>
+										)
+									})
+								}
+							</div>
+						</div>
+					</div>
+					<div className="form-group">
+						<div>
+							Leaderboard Badge
+						</div>
+						<div>
+                            <div className="bdg-holder">
+								{
+									Object.keys(badges).map((badge) => {
+										return(
+											<div
+												className={`badge-option ${data.badge_leader == badge ? 'selected' : ''}`}
+												onClick={() => selectBadge("badge_leader", badge)}
+											>
+												<img src={badges[badge]} />
+												<i className="fas fa-check-square indicator" />
+											</div>
+										)
+									})
+								}
+							</div>
 						</div>
 					</div>
 					<div className="flex align-center">

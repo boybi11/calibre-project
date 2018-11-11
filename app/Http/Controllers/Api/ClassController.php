@@ -119,7 +119,25 @@ class ClassController extends Controller
     {
         $response = [];
         $input = $request->all();
-        $data = League::with('user', 'tasks.users', 'players')->where('slug', $input['slug'])->first();
+        $data = League::with('user', 'tasks.users', 'players.tasks.league')->where('slug', $input['slug'])->first();
+        
+        if (! is_null($data)) {
+            $response['data'] = $data;
+            $response['message'] = 'Successfully retrieved data.';
+            $status = 200;
+        } else {
+            $response['message'] = 'Failed to retrieve data.';
+            $status = 500;
+        }
+
+        return response($response, $status);
+    }
+
+    public function getTask(Request $request)
+    {
+        $response = [];
+        $input = $request->all();
+        $data = Task::with('users', 'league.players')->where('id', $input['id'])->first();
 
         if (! is_null($data)) {
             $response['data'] = $data;
@@ -253,6 +271,39 @@ class ClassController extends Controller
         ]);
 
         $response['message'] = 'Successfully completed task.';
+        $response['data'] = $task;
+        $status = 200;
+
+        return response($response, $status);
+    }
+
+    public function finishTask(Request $request) {
+        $response = [];
+        $input = $request->all();
+
+        $task = Task::with('users', 'league.players')->find($input['task']);
+        $task->status = "completed";
+        $task->update();
+
+        $users = [];
+        foreach($task->users as $user) {
+            $users[] = $user->id;
+        }
+
+        $no_scores_players = [];
+        foreach($task->league->players as $player) {
+            if(!in_array($player->id, $users)) {
+                $no_scores_players[$player->id] = [
+                    'status' => 'teacher',
+                    'score' => 0
+                ];
+            }
+        }
+
+        $task->users()->attach($no_scores_players);
+
+        $response['message'] = 'Successfully completed task.';
+        $response['data'] = $task;
         $status = 200;
 
         return response($response, $status);

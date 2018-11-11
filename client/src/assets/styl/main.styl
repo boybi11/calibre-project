@@ -21,6 +21,14 @@ button
 
 [role=button]
 	cursor pointer
+
+.bg-icon
+	position absolute
+	right 0
+	bottom 0
+	transform scale(10)
+	opacity 0.3
+
 // FONT SIZE PRESETS
 .text
 	&-small
@@ -283,16 +291,16 @@ button
 // BG COLOR PRESETS
 .bg
 	&-primary
-		background-color #67a0bf
+		background-color #67a0bf !important
 	
 	&-success
-		background-color #54ad6f
+		background-color #54ad6f !important
 		
 	&-warning
-		background-color #ef9638
+		background-color #ef9638 !important
 	
 	&-danger
-		background-color #e02121
+		background-color #e02121 !important
 		
 .bg-image
 	&-full
@@ -713,12 +721,31 @@ button
 			animation-duration .7s
 			animation-fill-mode forwards
 			opacity 0
+			position relative
+
+			.badge-container
+				position absolute
+				right 20px
+				top 5px
+				z-index 5
+
+				img
+					width 30px
+					margin-right 5px
+
+				.empty-img
+					width 30px
+					height 30px
+					border 2px dashed #cccccc
+					border-radius 100%
+					display inline-block
+					margin-right 5px
 
 			.card
 				border-radius 5px
 				padding 20px
 				box-shadow 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 0 1px #111
-				margin 10px
+				margin 20px 10px
 				background #fff
 				color #111111
 				position relative
@@ -880,23 +907,35 @@ button
 	width 100%
 	height 100%
 	background rgba(0, 0, 0, 0.5)
-	display flex
-	align-items center
-	justify-content center
+	// display flex
+	// align-items center
+	// justify-content center
+	display block
 	color #111
 	transform scale(0)
 	opacity 0
 	transition .3s
 	transition-delay .3s
+	overflow auto
 
 	.modal-box
 		background #fff
 		padding 20px
 		border-radius 5px
 		min-width 500px
+		width 60%
+		margin 10px auto
 		transform scale(0)
 		transition 0.3s;
+		overflow hidden
+		position relative
 
+		.close-btn
+			position absolute
+			right 10px
+			top 10px
+			cursor pointer
+			font-size 20px
 	&.in
 		opacity 1
 		transform scale(1)
@@ -907,7 +946,59 @@ button
 			transform scale(1)
 			transition-delay 0.3s
 
+#taskView
+	overflow auto
+	
+	.modal-box
+		width 80%
 
+		.player-card
+			margin-top 0
+
+			[role=button]
+				position relative
+				z-index 5
+
+.task-status
+	background #ffffff
+	color #111111
+	padding 2px 5px
+	border-radius 5px 5px 0 0
+	width 70px
+	font-size 12px
+	text-align center
+	position relative
+	border 1px solid #cccccc
+	margin-left auto
+	margin-right 10px
+	margin-top 10px
+	border-bottom none
+
+	i
+		font-size 5px
+		color #666
+		margin 0 2px
+
+	&.bg-warning,
+	&.bg-success
+		color #fff
+		border-color #fff
+
+.score-sheet
+	width 100%
+	position relative
+	input 
+		background none
+		box-shadow none
+		border none
+		outline none
+		border-bottom 1px solid #cccccc
+	button
+		background #54ad6f
+		border 1px solid #54ad6f
+		box-shadow none
+		text-transform uppercase
+		letter-spacing 1px
 .loader
 	background rgba(0, 0, 0, 0.5)
 	position fixed
@@ -978,6 +1069,15 @@ button
 	animation-fill-mode forwards
 	opacity 0
 
+	.rank-number
+		position absolute
+		top 5px
+		left 5px
+		padding 2px 5px
+		font-size 10px
+		font-weight bold
+		border-radius 20px
+
 	.bg-icon
 		position absolute
 		right 0
@@ -1019,6 +1119,83 @@ button
 .badge
 	padding 5px
 	font-size 12px
+
+.bdg-holder
+	display flex
+	flex-wrap wrap
+
+	.badge-option
+		width 10%
+		margin 10px 5%
+		padding 2.5%
+		box-shadow 0 0 0 1px #ccc
+		border-radius 5px
+		opacity 0.5
+		cursor pointer
+		transition 0.2s
+		position relative
+		filter grayscale(50%)
+
+		img
+			width 100%
+
+		.indicator
+			position absolute
+			right 0
+			top 0
+			transition 0.2s
+
+		&:hover,
+		&.selected
+			opacity 1
+			filter grayscale(0%)
+
+			.indicator
+				color #398439
+
+.profile-container
+	width 80%
+	min-width 300px
+	margin 0 auto
+	padding 50px
+	.user-dp
+		text-align center
+		color #fff
+		img
+			width 150px
+			height 150px
+			object-fit cover
+			object-position center center
+			border-radius 100%
+
+		.username
+			font-size 18px
+			margin-top 10px
+		.usertype
+			margin-bottom 50px
+			font-size 12px
+	.input-lbl
+		color #fff
+
+	.stats
+		.header
+			color #ffffff
+			font-weight bold
+			font-size 20px
+			margin-bottom 10px
+
+		.stat-details
+			padding 15px
+			background #ffffff
+			border-radius 5px
+
+		.stat
+			display flex
+			margin-bottom 10px
+
+			> div:first-child
+				flex 1
+
 @import '../../modules/**/*.styl';
 
 
