@@ -216,11 +216,11 @@ export class Nav extends React.Component {
 									<i className="fas fa-users" /> Leagues
 								</Link>
 							</li>
-							<li>
+							{/* <li>
 								<Link to="/leagues" onClick={() => this.toggleMenu()}>
 									<i className="fas fa-tasks" /> Quests
 								</Link>
-							</li>
+							</li> */}
 							<li>
 								<Link to="/profile" onClick={() => this.toggleMenu()}>
 									<i className="far fa-user" /> Profile

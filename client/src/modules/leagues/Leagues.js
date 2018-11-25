@@ -190,9 +190,9 @@ class Leagues extends Component {
 															(this.props.user.front_user_type !== "teacher") && (
 																<div className="gm-name">
 																	<div className="sm-label">
-																		League Master:
+																		Quest Giver:
 																	</div>
-																	<div className="text-primary">
+																	<div className="text-warning">
 																		{league.user.first_name + " " + league.user.last_name}
 																	</div>
 																</div>

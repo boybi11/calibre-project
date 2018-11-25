@@ -8,7 +8,7 @@ export function getList(id) {
 	return function (dispatch) {
 		return apiHelper.connect().get('/classes/get_list?gm_id=' + id)
 			.then(res => {
-				dispatch({type: types.LEAGUE_LIST_RETRIEVED, data: res.data});
+				return dispatch({type: types.LEAGUE_LIST_RETRIEVED, data: res.data});
 			}).catch(error => {
 				throw(error);
 			});
@@ -19,7 +19,7 @@ export function getLeagues(id) {
 	return function (dispatch) {
 		return apiHelper.connect().get('/classes/get_leagues?player=' + id)
 			.then(res => {
-				dispatch({type: types.LEAGUE_LIST_RETRIEVED, data: res.data});
+				return dispatch({type: types.LEAGUE_LIST_RETRIEVED, data: res.data});
 			}).catch(error => {
 				throw(error);
 			});
